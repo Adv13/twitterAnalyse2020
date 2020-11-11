@@ -1,0 +1,285 @@
+PART 4 : EXPLORATION OF THE TWEETS CONCERNING THE HASHTAG ATTENTATNICE IN FRENCH
+
+#Import of the concerned libraries
+%matplotlib inline
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+#Dataframe
+df1 = pd.read_csv('C:/Users/tdyna/04FRANCE2020/tweet_attentat_nice_fr02.csv')
+df1.head()
+
+#Check of missing values
+df1.isna().sum()
+
+#Dataframe size in order to see empty columns
+df1.shape
+
+#Remove empty columns
+df1.drop(['Tweet_coordinates', 'Tweet_user_lang', 'Tweet_geo' ], axis=1, inplace=True)
+
+#Remove missing values
+df1.dropna(how='any', inplace=True)
+df1.isna().sum()
+
+#Extraction of the month and weekday in order to see when the tweets have been created
+df1['Tweet_created_at']=pd.to_datetime(df1['Tweet_created_at'])
+df1['Tweet_created_at_month'] = df1['Tweet_created_at'].dt.month
+df1['Tweet_created_at_weekday'] = df1['Tweet_created_at'].dt.weekday
+df1.head()
+
+
+#Location of the tweets created and using the concerned hashtag
+plt.figure(figsize=(150,20))
+sns.countplot(x = "Tweet_user_location", data= df1);
+#Too much values
+
+
+#Location of the tweets created and using the concerned hashtag
+df1['Tweet_user_location'].value_counts()
+"""APERCU
+France                             107
+Paris, France                       86
+Paris                               36
+Nice, France                        26
+#Nice06 #TheCCproject               21
+Ile-de-France, France               15
+Marseille                           12
+paris                                9
+Espana Aragon Alquezar               7
+Mayenne                              7
+Nice                                 7
+Lyon, France                         6
+Côte d'Azur                          6
+longwy                               6
+Toulouse, France                     6
+Metz, France                         6
+Frankistan                           6
+Pays de la Loire, France             5
+World                                5
+Marseille, France                    5
+Paris, Ile-de-France                 5
+Elysee                               5
+Principauté de Monaco                5
+Etc
+"""
+
+#Regroup similar values
+df1['Tweet_user_location'].replace(['Paris','paris','Paris, Ile-de-France','Paris - France'],
+                                   ['Paris, France','Paris, France','Paris, France','Paris, France'],
+                                   inplace=True)
+df1['Tweet_user_location'].replace(['#Nice06 #TheCCproject','Nice','nice','Nice France (06)','NICE'],
+                                   ['Nice, France','Nice, France','Nice, France','Nice, France','Nice, France'],
+                                   inplace=True)
+df1['Tweet_user_location'].replace(['Toulouse'],['Toulouse, France'], inplace=True)
+df1['Tweet_user_location'].replace(['Côte d\'Azur'],['Provence-Alpes-Côte d\'Azur'], inplace=True)
+df1['Tweet_user_location'].replace(['Lyon'],['Lyon, France'], inplace=True)
+df1['Tweet_user_location'].replace(['Monaco'],['Principauté de Monaco'], inplace=True)
+df1['Tweet_user_location'].replace(['Marseille','marseille'],['Marseille, France','Marseille, France'], inplace=True)
+
+
+#Location of the tweets created and using the concerned hashtag
+df1['Tweet_user_location'].value_counts()
+"""APERCU
+Paris, France                      138
+France                             107
+Nice, France                        62
+Marseille, France                   18
+Ile-de-France, France               15
+Toulouse, France                    10
+Provence-Alpes-Côte d'Azur           9
+Lyon, France                         9
+Principauté de Monaco                8
+Espana Aragon Alquezar               7
+Mayenne                              7
+Frankistan                           6
+longwy                               6
+Metz, France                         6
+Saint-Jeannet, France                5
+World                                5
+Elysee                               5
+Etc"""
+
+#Number of tweets created by month
+plt.figure(figsize=(30,10))
+sns.countplot(x = "Tweet_created_at_month", data= df1);
+
+#Number of tweets created by week day
+plt.figure(figsize=(30,10))
+sns.countplot(x = "Tweet_created_at_weekday", data= df1);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+PART 5 : EXPLORATION OF THE TWEETS CONCERNING THE HASHTAG #BoycottFrenchProducts IN FRENCH
+
+#Dataframe
+df2 = pd.read_csv('C:/Users/tdyna/04FRANCE2020/tweet_boycott_french_products_fr02.csv')
+df2.head()
+
+#Check of missing values
+df2.isna().sum()
+
+#Dataframe size in order to see empty columns
+df2.shape
+
+df2.drop(['Tweet_coordinates', 'Tweet_user_lang', 'Tweet_geo' ], axis=1, inplace=True)
+
+df2.dropna(how='any', inplace=True)
+df2.isna().sum()
+
+
+#Extraction of the month and weekday in order to see when the tweets have been created
+df2['Tweet_created_at']=pd.to_datetime(df2['Tweet_created_at'])
+df2['Tweet_created_at_month'] = df2['Tweet_created_at'].dt.month
+df2['Tweet_created_at_weekday'] = df2['Tweet_created_at'].dt.weekday
+df2.head()
+
+
+#Location of the tweets created and using the concerned hashtag
+plt.figure(figsize=(150,20))
+sns.countplot(x = "Tweet_user_location", data= df2);
+#Too much values
+
+
+#Location of the tweets created and using the concerned hashtag
+df2['Tweet_user_location'].value_counts()
+"""APERCU
+Atlanta, GA                 11
+Tunisia                      9
+Algeria                      7
+Montréal                     5
+Tunisie                      4
+Ile-de-France, France        3
+France                       3
+Angleterre, Royaume-Uni      3
+Fulaani Land🏳️               3
+Berlin, Germany              3
+Terre                        2
+Leuven, België               2
+L'Algiré                     2
+سلطنة السلام عمان            2
+مكة المكرمة                  2
+Bordeaux, France             2
+Là-bas                       1
+Royaume du Maroc             1
+हिन्दू राष्ट्र               1
+Grand Casablanca             1
+Toronto                      1
+tunis                        1
+بيت الله حرم                 1
+Etc"""
+
+#Regroup similar values
+df2['Tweet_user_location'].replace(['Tunisie'],
+                                   ['Tunisia'],
+                                   inplace=True)
+ 
+#Location of the tweets created and using the concerned hashtag                                  
+df2['Tweet_user_location'].value_counts()
+"""APERCU
+Tunisia                     13
+Atlanta, GA                 11
+Algeria                      7
+Montréal                     5
+Fulaani Land🏳️               3
+France                       3
+Berlin, Germany              3
+Angleterre, Royaume-Uni      3
+Ile-de-France, France        3
+L'Algiré                     2
+مكة المكرمة                  2
+سلطنة السلام عمان            2
+Bordeaux, France             2
+Terre                        2
+Leuven, België               2
+Belgique                     1
+الخاص للنساء فقط             1
+Royaume du Maroc             1
+Pakistan                     1
+Montpellier, France          1
+ALgerian Man 5/ 5            1
+بيت الله حرم                 1
+Vatican, Bretagne, Paris     1
+93 seine saint Denis         1
+Toronto                      1
+Etc"""
+
+
+
+#Number of tweets created by month
+plt.figure(figsize=(30,10))
+sns.countplot(x = "Tweet_created_at_month", data= df2);
+
+#Number of tweets created by week day
+plt.figure(figsize=(30,10))
+sns.countplot(x = "Tweet_created_at_weekday", data= df2);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+PART 6 : EXPLORATION OF THE TWEETS CONCERNING THE HASHTAG #لن_تخدعنا_ماكرون IN ARABIC (TRAD : "Macron_ne_nous_trompera_pas"/"Macron won't have us")
+
+#Dataframe
+df3 = pd.read_csv('C:/Users/tdyna/04FRANCE2020/tweet_Macron_ne_nous_trompera_pas_ar02.csv')
+df3.head()
+
+#Check of missing values
+df3.isna().sum()
+
+#Dataframe size in order to see empty columns
+df3.shape
+
+df3.drop(['Tweet_coordinates', 'Tweet_user_lang', 'Tweet_geo' ], axis=1, inplace=True)
+
+df3.dropna(how='any', inplace=True)
+df3.isna().sum()
+
+#Extraction of the month and weekday in order to see when the tweets have been created
+df3['Tweet_created_at']=pd.to_datetime(df3['Tweet_created_at'])
+df3['Tweet_created_at_month'] = df3['Tweet_created_at'].dt.month
+df3['Tweet_created_at_weekday'] = df3['Tweet_created_at'].dt.weekday
+df3.head()
+
+#Location of the tweets created and using the concerned hashtag
+plt.figure(figsize=(150,20))
+sns.countplot(x = "Tweet_user_location", data= df3);
+
+
+#Location of the tweets created and using the concerned hashtag
+df3['Tweet_user_location'].value_counts()
+"""APERCU
+القاهرة, مصر                       2
+Bethlehem/Amman                    2
+jeddah , ksa                       2
+International                      1
+Philadelphia, PA                   1
+Jeddah, Kingdom of Saudi Arabia    1
+Riyadh,SA                          1
+Malaysia                           1
+\tBeşiktaş, Istanbul               1
+أرض الله الواسعة                   1
+دولة الكويت                        1
+مُعْتَكَفُ الْعُظَمَاء             1
+كل الدول الاسلاميه                 1
+في صدرك بين نبضاته ♡               1
+jordan Mafraq                      1
+Alger                              1
+المنفى.                            1
+egypt                              1
+كسلا - السودان                     1
+مسقط                               1
+في اللامكان                        1
+طيبة الطيبة                        1
+مصر                                1
+Mansoura Egypt                     1
+بلاد الظلم أوطاني 💔                1
+Name: Tweet_user_location, dtype: int64
+"""
+
+#Number of tweets created by month
+plt.figure(figsize=(30,10))
+sns.countplot(x = "Tweet_created_at_month", data= df3);
+
+#Number of tweets created by week day
+plt.figure(figsize=(30,10))
+sns.countplot(x = "Tweet_created_at_weekday", data= df3);
