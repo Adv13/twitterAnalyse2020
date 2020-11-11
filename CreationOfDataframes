@@ -1,0 +1,235 @@
+
+#Import of concerned libraries
+import os
+import tweepy as tw
+import pandas as pd
+
+#see all rows and columns
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+
+#logs for Twitter API (you can't use them, I added a mistake inside them on purpose)
+consumer_key= 'NjpzKdfVpMDDYhqIXaU0sxnNbF'
+consumer_secret= 'KRiNu8jiTKVqHkgOiCOKl8COfCD58WI6Vb1IYqmCLXqUIGvv2G7'
+access_token= '635532122-P6A7eHBsJpvoO81d5PYfDSP1YsHMWrYNfZqA9EXAB'
+access_token_secret= 'DKm7QWJRfuhbDPWZdHemrTlNs6Dk2DYtFBhdExlvAE2XMg'
+
+auth = tw.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
+api = tw.API(auth, wait_on_rate_limit=True)
+
+"""
+FOR INFORMATION
+# Post a tweet from Python
+api.update_status("Look, I'm tweeting from #Python in my #earthanalytics class!")
+# Your tweet has been posted!
+#doesn't work but allow me to know if I'm connected or not
+"""
+
+
+"""
+SELECTED VARIABLES
+
+tweet.author
+tweet.created_at
+tweet.geo
+tweet.place
+tweet.lang
+tweet.contributors
+tweet.favorite_count
+tweet.possibly_sensitive
+
+tweet.retweet_count
+
+tweet.user.created_at
+tweet.text
+tweet.user.screen_name
+tweet.user.lang
+tweet.user.location
+tweet.user.geo_enabled
+tweet.user.followers_count
+tweet.user.favourites_count
+
+"""
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+PART 1 : RECOVERY OF TWEETS CONCERNING THE HASHTAG #ATTENTATNICE IN FRENCH
+
+# Define the search term and the date_since date as variables
+search_words = "#AttentatNice"
+date_since = "2020-10-30"
+
+# Collect tweets
+tweetsFr = tw.Cursor(api.search,
+              q=search_words,
+              lang="fr",
+              since=date_since).items(5000)
+tweetsFr
+
+# Iterate and print tweets
+for tweet in tweetsFr:
+    print(tweet.text)
+    
+    
+# Collect tweets
+tweetsFr = tw.Cursor(api.search,
+                       q=search_words,
+                       lang="fr",
+                       since=date_since).items(5000)
+
+# Collect a list of tweets
+[tweet.text for tweet in tweetsFr]
+
+#remove retweets in the research
+new_searchFr = '#AttentatNice -filter:retweets'
+new_searchFr
+
+tweetsFr = tw.Cursor(api.search,
+                       q=new_searchFr,
+                       lang="fr",
+                       since=date_since).items(5000)
+
+[tweet.text for tweet in tweetsFr]
+
+tweetsFr = tw.Cursor(api.search, 
+                           q=new_searchFr,
+                           lang="fr",
+                           since=date_since).items(5000)
+#Select specific variables
+users_locsFr = [[tweet.user.created_at, tweet.created_at, tweet.coordinates, tweet.user.id, tweet.user.screen_name, tweet.text, tweet.user.lang,
+               tweet.user.location, tweet.user.geo_enabled, tweet.geo,
+               tweet.retweet_count, tweet.user.followers_count, tweet.user.favourites_count] for tweet in tweetsFr]
+users_locsFr
+
+#create the dataframe
+tweet_attentat_nice = pd.DataFrame(data=users_locsFr, 
+                    columns=['Tweet_user_created_at', 'Tweet_created_at', 'Tweet_coordinates', 'Tweet_user_id', 'Tweet_user', 'Tweet_text',
+                             'Tweet_user_lang',
+                             'Tweet_user_location','Tweet_user_geo_enabled', 'Tweet_geo',
+                             'Tweet_retweet_count','Tweet_user_followers_count','Tweet_user_favorites_count'])
+                             
+tweet_attentat_nice.head(20)
+
+#save the dataframe in a file
+tweet_attentat_nice.to_csv( "Tweet_attentat_nice_fr02.csv", index=False, encoding='utf-8-sig')
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+PART 2 : RECOVERY OF TWEETS CONCERNING THE HASHTAG #BoycottFrenchProducts IN FRENCH
+
+search_words2 = "#BoycottFrenchProducts"
+date_since = "2020-10-30"
+
+# Collect tweets
+tweetsFr2 = tw.Cursor(api.search,
+              q=search_words2,
+              lang="fr",
+              since=date_since).items(5000)
+tweetsFr2
+
+# Iterate and print tweets
+for tweet in tweetsFr2:
+    print(tweet.text)
+    
+# Collect tweets
+tweetsFr2 = tw.Cursor(api.search,
+                       q=search_words2,
+                       lang="fr",
+                       since=date_since).items(5000)
+
+# Collect a list of tweets
+[tweet.text for tweet in tweetsFr2]
+
+#Remove retweets for the research
+new_searchFr2 = '#BoycottFrenchProducts -filter:retweets'
+new_searchFr2
+
+tweetsFr2 = tw.Cursor(api.search,
+                       q=new_searchFr2,
+                       lang="fr",
+                       since=date_since).items(5000)
+
+[tweet.text for tweet in tweetsFr2]
+
+tweetsFr2 = tw.Cursor(api.search, 
+                           q=new_searchFr2,
+                           lang="fr",
+                           since=date_since).items(5000)
+#Select the variables
+users_locsFr2 = [[tweet.user.created_at, tweet.created_at, tweet.coordinates, tweet.user.id, tweet.user.screen_name, tweet.text, tweet.user.lang,
+               tweet.user.location, tweet.user.geo_enabled, tweet.geo,
+               tweet.retweet_count, tweet.user.followers_count, tweet.user.favourites_count] for tweet in tweetsFr2]
+users_locsFr2
+
+#Create dataframe
+tweet_boycott_french_products = pd.DataFrame(data=users_locsFr2, 
+                    columns=['Tweet_user_created_at','Tweet_created_at', 'Tweet_coordinates', 'Tweet_user_id', 'Tweet_user', 'Tweet_text',
+                             'Tweet_user_lang',
+                             'Tweet_user_location','Tweet_user_geo_enabled', 'Tweet_geo',
+                             'Tweet_retweet_count','Tweet_user_followers_count','Tweet_user_favorites_count'])
+tweet_boycott_french_products.head(20)
+
+#Save dataframe on a file
+tweet_boycott_french_products.to_csv( "Tweet_boycott_french_products_fr02.csv", index=False, encoding='utf-8-sig')
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+PART 3 : RECOVERY OF TWEETS CONCERNING THE HASHTAG #لن_تخدعنا_ماكرون IN ARABIC (TRAD : "Macron ne nous tompera pas")
+
+# Define the search term and the date_since date as variables
+search_words3 = "#لن_تخدعنا_ماكرون"
+date_since = "2020-10-30"
+
+# Collect tweets
+tweetsFr3 = tw.Cursor(api.search,
+              q=search_words3,
+              lang="ar",
+              since=date_since).items(5000)
+tweetsFr3
+
+
+# Iterate and print tweets
+for tweet in tweetsFr3:
+    print(tweet.text)
+    
+# Collect tweets
+tweetsFr3 = tw.Cursor(api.search,
+                       q=search_words3,
+                       lang="ar",
+                       since=date_since).items(5000)
+
+# Collect a list of tweets
+[tweet.text for tweet in tweetsFr3]
+
+#Remove retweets from the research
+new_searchFr3 = '#لن_تخدعنا_ماكرون -filter:retweets'
+new_searchFr3
+
+tweetsFr3 = tw.Cursor(api.search,
+                       q=new_searchFr3,
+                       lang="ar",
+                       since=date_since).items(5000)
+
+[tweet.text for tweet in tweetsFr3]
+
+tweetsFr3 = tw.Cursor(api.search, 
+                           q=new_searchFr3,
+                           lang="ar",
+                           since=date_since).items(5000)
+
+#Selected variables
+users_locsFr3 = [[tweet.user.created_at, tweet.created_at, tweet.coordinates, tweet.user.id, tweet.user.screen_name, tweet.text, tweet.user.lang,
+               tweet.user.location, tweet.user.geo_enabled, tweet.geo,
+               tweet.retweet_count, tweet.user.followers_count, tweet.user.favourites_count] for tweet in tweetsFr3]
+users_locsFr3
+
+#Create the dataframe
+tweet_Macron_ne_nous_trompera_pas_ar = pd.DataFrame(data=users_locsFr3, 
+                    columns=['Tweet_user_created_at', 'Tweet_created_at', 'Tweet_coordinates', 'Tweet_user_id', 'Tweet_user', 'Tweet_text',
+                             'Tweet_user_lang',
+                             'Tweet_user_location','Tweet_user_geo_enabled', 'Tweet_geo',
+                             'Tweet_retweet_count','Tweet_user_followers_count','Tweet_user_favorites_count'])
+tweet_Macron_ne_nous_trompera_pas_ar.head(20)
+
+#Save the dataframe on a file
+tweet_Macron_ne_nous_trompera_pas_ar.to_csv( "Tweet_Macron_ne_nous_trompera_pas_ar02.csv", index=False, encoding='utf-8-sig')
